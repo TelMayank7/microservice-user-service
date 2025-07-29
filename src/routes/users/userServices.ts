@@ -92,21 +92,49 @@ class UserServices {
 
   async getAllUsers(req: Request, res: Response) {
     try {
-
       const users = await userDao.getAllUsers();
 
       if (!users || users.length === 0) {
         return res.status(404).json({ message: "No users found" });
       }
 
-      return res.status(200).json({ message: "Users retrieved successfully", data: users });
-      
+      return res
+        .status(200)
+        .json({ message: "Users retrieved successfully", data: users });
     } catch (error) {
       console.error("Error fetching all users:", error);
       return res.status(500).json({ message: "Internal Server Error" });
-      
     }
   }
+
+  async updateUser(req: Request, res: Response) {
+    try {
+      const userId = req.params.id;
+      const userData = req.body;
+
+      if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+
+      const updatedUser = await userDao.updateUser(
+        userId as unknown as Types.ObjectId,
+        userData
+      );
+
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "User updated successfully", data: updatedUser });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  
 }
 
 export default new UserServices();

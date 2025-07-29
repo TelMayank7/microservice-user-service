@@ -16,8 +16,15 @@ class UserDao {
     return await User.findById(id);
   }
 
-  async getAllUsers() : Promise<IUSerDoc[]> {
+  async getAllUsers(): Promise<IUSerDoc[]> {
     return await User.find({});
+  }
+
+  async updateUser(
+    id: Types.ObjectId,
+    userData: Partial<IUSerDoc>
+  ): Promise<IUSerDoc | null> {
+    return await User.findByIdAndUpdate(id, userData, { new: true });
   }
 }
 
